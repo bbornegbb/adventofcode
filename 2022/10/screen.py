@@ -29,6 +29,17 @@ def analyze_(fname):
     yield cycle, x
 
 
+def print_screen(screen, light_char="#", dark_char=" "):
+    for row in screen:
+        print("".join(light_char if b else dark_char for b in row))
+
+
+# def format_screen(screen, light_char="#", dark_char=" "):
+#     return "\n".join(
+#         "".join(light_char if b else dark_char for b in row) for row in screen
+#     )
+
+
 def analyze(fname):
     screen = np.zeros((6, 40), bool)
     for clock, (cycle, x) in enumerate(analyze_(fname)):
@@ -36,10 +47,10 @@ def analyze(fname):
         if ncol - 1 <= x <= ncol + 1:
             nrow = (clock // 40) % 6
             screen[nrow, ncol] = True
-    return "\n".join("".join("#" if b else " " for b in row) for row in screen)
+    return screen
 
 
 if __name__ == "__main__":
-    # print(analyze("test.txt"))
-    # print(analyze("test2.txt"))
-    print(analyze("input.txt"))
+    # print_screen(analyze("test.txt"))
+    # print_screen(analyze("test2.txt"))
+    print_screen(analyze("input.txt"))

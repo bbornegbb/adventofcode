@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
+
 class Elve(object):
     def __init__(self, sections):
         self.start, self.end = (int(s) for s in sections.split("-"))
 
-
     def contains(self, other):
         return self.start <= other.start and self.end >= other.end
 
-
     def overlaps(self, other):
-        return ((self.start <= other.start and self.end >= other.start) or
-                 (other.start <= self.start and other.end >= self.start))
-
+        return (self.start <= other.start and self.end >= other.start) or (
+            other.start <= self.start and other.end >= self.start
+        )
 
     def __str__(self):
         return f"Elve('{self.start}-{self.end}')"

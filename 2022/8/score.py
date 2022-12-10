@@ -2,10 +2,12 @@
 
 import pandas as pd
 
+
 def read_data(fname):
     with open(fname) as f:
         for line in f:
             yield [int(i) for i in line.strip()]
+
 
 def visibility_top(df):
     can_see = pd.DataFrame(1, df.index, df.columns)
@@ -13,7 +15,7 @@ def visibility_top(df):
     for i in range(1, len(df)):
         shifted = df.shift(i, fill_value=10)
         result += can_see & (shifted < 10)
-        can_see &= (df > shifted)
+        can_see &= df > shifted
     return result
 
 
@@ -26,7 +28,7 @@ def visibility_left(df):
 
 
 def visibility_right(df):
-    return visibility_left(df.loc[:,::-1])
+    return visibility_left(df.loc[:, ::-1])
 
 
 def analyze(fname):
@@ -36,6 +38,7 @@ def analyze(fname):
     vt = visibility_top(df)
     vb = visibility_bottom(df)
     return vl * vr * vt * vb
+
 
 if __name__ == "__main__":
     df = analyze("input.txt")

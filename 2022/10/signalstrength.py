@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 def read_data(fname):
     with open(fname) as f:
         for line in f:
@@ -25,17 +26,17 @@ def analyze_(fname):
             x += amount
     yield cycle, x
 
+
 def analyze(fname):
     strength = 0
     for cycle, x in analyze_(fname):
         if (cycle - 20) % 40 == 0:
-            #print(cycle, x)
+            # print(cycle, x)
             strength += cycle * x
     return strength
 
 
 if __name__ == "__main__":
-    #print(analyze("test.txt"))
-    #print(analyze("test2.txt"))
+    # print(analyze("test.txt"))
+    # print(analyze("test2.txt"))
     print(analyze("input.txt"))
-

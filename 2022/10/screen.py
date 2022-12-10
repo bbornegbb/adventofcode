@@ -2,6 +2,7 @@
 
 import numpy as np
 
+
 def read_data(fname):
     with open(fname) as f:
         for line in f:
@@ -27,6 +28,7 @@ def analyze_(fname):
             x += amount
     yield cycle, x
 
+
 def analyze(fname):
     screen = np.zeros((6, 40), bool)
     for clock, (cycle, x) in enumerate(analyze_(fname)):
@@ -34,11 +36,10 @@ def analyze(fname):
         if ncol - 1 <= x <= ncol + 1:
             nrow = (clock // 40) % 6
             screen[nrow, ncol] = True
-    return "\n".join("".join('#' if b else ' ' for b in row) for row in screen)
+    return "\n".join("".join("#" if b else " " for b in row) for row in screen)
 
 
 if __name__ == "__main__":
-    #print(analyze("test.txt"))
-    #print(analyze("test2.txt"))
+    # print(analyze("test.txt"))
+    # print(analyze("test2.txt"))
     print(analyze("input.txt"))
-

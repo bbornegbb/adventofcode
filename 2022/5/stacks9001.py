@@ -4,11 +4,12 @@ from collections import namedtuple
 
 Move = namedtuple("Move", "count from_ to")
 
+
 def read_stacks(fhandle):
     lines = []
     for line in fhandle:
         line = line.rstrip("\n")
-        if line == '':
+        if line == "":
             break
         lines.append(line)
     stack_names = lines[-1].split()
@@ -17,7 +18,7 @@ def read_stacks(fhandle):
         # fast but not very robust
         stack_items = line[1::4]
         for i, stack_item in enumerate(stack_items):
-            if stack_item != ' ':
+            if stack_item != " ":
                 stacks[i].append(stack_item)
     return stack_names, stacks
 

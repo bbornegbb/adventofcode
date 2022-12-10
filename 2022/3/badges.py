@@ -3,11 +3,12 @@
 import collections
 import itertools
 
+
 def priority(alpha):
-    if 'a' <= alpha <= 'z':
-        return ord(alpha) - ord('a') + 1
-    elif 'A' <= alpha <= 'Z':
-        return ord(alpha) - ord('A') + 27
+    if "a" <= alpha <= "z":
+        return ord(alpha) - ord("a") + 1
+    elif "A" <= alpha <= "Z":
+        return ord(alpha) - ord("A") + 27
 
 
 def test_priority():
@@ -24,10 +25,12 @@ def badge(h1, h2):
 
 def analyze(fname="input.txt"):
     total = 0
+
     def lines():
         with open(fname) as f:
             for line in f:
                 yield line.strip()
+
     k = lines()
     try:
         while True:

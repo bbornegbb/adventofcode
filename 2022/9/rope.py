@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+
 def read_data(fname):
     with open(fname) as f:
         for line in f:
             direction, amount = line.split()
             yield direction, int(amount)
+
 
 class Loc(object):
     def __init__(self):
@@ -72,10 +74,11 @@ def analyze(fname):
     data = read_data(fname)
     head = Head()
     tail = Tail()
-    moves = {'U': head.up,
-             'D': head.down,
-             'L': head.left,
-             'R': head.right,
+    moves = {
+        "U": head.up,
+        "D": head.down,
+        "L": head.left,
+        "R": head.right,
     }
     visited = set()
     for direction, amount in data:
@@ -88,6 +91,5 @@ def analyze(fname):
 
 
 if __name__ == "__main__":
-    #print(len(analyze("test.txt")))
+    # print(len(analyze("test.txt")))
     print(len(analyze("input.txt")))
-

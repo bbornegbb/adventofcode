@@ -51,8 +51,8 @@ def outside(rock, o_in=None):
 
 
 def analyze(fname):
-    # bumping coordinates so to avoid annoying
-    # boundary checks in surface and outside computations
+    # bumping coordinates to avoid annoying boundary checks in
+    # surface and outside computations
     data = list([x + 1, y + 1, z + 1] for x, y, z in read_data(fname))
     a = np.array(data, dtype="int8")
     shape = tuple(i + 2 for i in np.max(a, axis=0))

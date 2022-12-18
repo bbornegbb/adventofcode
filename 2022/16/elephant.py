@@ -32,44 +32,27 @@ def read_data(fname):
             yield Valve(gd["name"], int(gd["rate"]), tunnels)
 
 
-def search(G, loc, targets, target_rates, minute=0):
+def search(G, all_path_costs, loc, targets, target_rates, minute=0):
     best_relief = -1
     for target in targets:
-        path = nx.shortest_path(G, loc, target)
-        # (len(path) - 1) minutes to get there, 1 minute to enable flow
-        time_to_enable = len(path)
+        time_to_enable = all_path_costs[(loc, target)]
         new_minute = minute + time_to_enable
         if new_minute >= MAX_TIME:
             continue
         remaining_targets = [t for t in targets if t != target]
-        remaining_flow_potential = sum(
-            target_rates[t] * (MAX_TIME - new_minute - i - 1)
-            for i, t in enumerate(
-                sorted(remaining_targets, key=lambda x: -target_rates[x])
-            )
-        )
         my_relief = (MAX_TIME - new_minute) * target_rates[target]
-        if best_relief > my_relief + remaining_flow_potential:
-            continue
-        found_relief, actions = search(
-            G, target, remaining_targets, target_rates, new_minute
+        found_relief = search(
+            G, all_path_costs, target, remaining_targets, target_rates, new_minute
         )
         total_relief = my_relief + found_relief
         if total_relief > best_relief:
             best_relief = total_relief
             best_target = target
-            best_path = path
-            best_actions = actions
             best_minute = new_minute
     # We ran out of time
     if best_relief == -1:
-        return 0, []
-    actions_new = [f"Walk to {node}" for node in best_path[1:]]
-    actions_new.append(
-        f"Enable flow at {best_target} with rate {G.nodes[best_target]['rate']} at minute={best_minute}"
-    )
-    actions_new.extend(best_actions)
-    return best_relief, actions_new
+        return 0
+    return best_relief
 
 
 def build_graph(data):
@@ -85,15 +68,21 @@ def partition_work(data):
     s = set(data)
     l = len(s)
     for w in itertools.chain.from_iterable(
-        itertools.combinations(s, r) for r in range(l // 2 + 1)
+        itertools.combinations(s, r) for r in range(l // 2, -1, -1)
     ):
         yield w, tuple(s - set(w))
 
 
-def analyze(fname):
+def analyze(fname, correct_answer=None, draw_graph=False):
     data = list(read_data(fname))
     G = build_graph(data)
-    if False:
+    all_shortest_paths = dict(nx.all_pairs_shortest_path(G))
+    all_path_costs = {
+        (src, dst): len(path)
+        for src, paths in all_shortest_paths.items()
+        for dst, path in paths.items()
+    }
+    if draw_graph:
         labels = nx.get_node_attributes(G, "rate")
         labels = {k: f"{k} {v}" for k, v in labels.items()}
         nx.draw_networkx(G, labels=labels, font_color="w", node_size=1500)
@@ -103,13 +92,20 @@ def analyze(fname):
     )
     target_rates = {v.name: v.rate for v in data if v.rate > 0}
     best_flow = -1
-    for t1, t2 in partition_work(targets):
-        f1, _ = search(G, "AA", t1[::-1], target_rates, 0)
-        f2, _ = search(G, "AA", t2[::-1], target_rates, 0)
+    for i, (t1, t2) in enumerate(partition_work(targets)):
+        if i % 100 == 0:
+            print(i)
+        f1 = search(G, all_path_costs, "AA", t1[::-1], target_rates, 0)
+        f2 = search(G, all_path_costs, "AA", t2[::-1], target_rates, 0)
         f = f1 + f2
         if f > best_flow:
             best_flow = f
             best_partition = (t1, t2)
+
+    if correct_answer != None:
+        assert (
+            best_flow == correct_answer
+        ), f"Broken algorithm. Want: {correct_answer}  Got: {best_flow}"
 
     return {
         "degree": G.degree,
@@ -121,5 +117,5 @@ def analyze(fname):
 
 
 if __name__ == "__main__":
-    # pprint(analyze("test.txt"))
-    pprint(analyze("input.txt"))
+    # pprint(analyze("test.txt", 1707))
+    pprint(analyze("input.txt", 2100))

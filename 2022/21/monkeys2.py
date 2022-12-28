@@ -113,7 +113,7 @@ def analyze(fname):
 
     monkeys[HUMAN] = LeafMonkey(HUMAN, v, monkeys)
     got = searchroot.get_value()
-    assert got == target, "Want: {target}  got: {v2}  injected: {v}"
+    assert got == target, "Want: {target}  got: {got}  injected: {v}"
     return v
 
 

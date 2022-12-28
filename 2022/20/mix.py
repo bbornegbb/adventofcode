@@ -31,7 +31,7 @@ def mix(data):
             d.appendleft(Item(e.value, True, e.is_last))
             d.rotate(amount - (1 if amount <= 0 else 0))
         if e.is_last:
-            d.rotate(-1)
+            d.rotate(-1) # not functionally needed but nice to keep output in sync with example
             break
     return list(item.value for item in d)
 

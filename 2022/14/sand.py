@@ -20,7 +20,7 @@ class Board(object):
     def from_scans(scans):
         xmin, xmax, _, ymax = minmax(scans)
         # sand starts falling at (500, 0) - align ymin with that
-        ymin = min(ymin, NOZZLE_LOC.y)
+        ymin = NOZZLE_LOC.y
         # # add margins left and right to facilitate falling sand
         # # computation
         # xmin -= 1
